@@ -16,13 +16,15 @@ public:
 	std::vector<int> months = { 31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	Date setDate(int, int, int);
 	void print();
-	int countDaysBetweenTwoDates(Date);
+	int days_range(Date);
 	bool leap();
-	int days_in_year(Date);
-	int days_in_month(Date);
+	int days_in_year();
+	int days_in_month();
 	int countDays();
 	bool right_date();
 	void next();
 	Date past_date(int);
-	void future_date(int);
+	Date future_date(int);
+
+	int days_to_exams();
 };

@@ -32,15 +32,15 @@ bool Date::leap() {
 		(this->year % 4 == 0);
 }
 
-int Date::days_in_year(Date y) {
-	return (y.leap() ? 366 : 365);
+int Date::days_in_year() {
+	return (this->leap() ? 366 : 365);
 }
 
-int Date::days_in_month(Date m) {
-	if (m.month == 4 || m.month == 6 || m.month == 9 || m.month == 11) {
+int Date::days_in_month() {
+	if (this->month == 4 || this->month == 6 || this->month == 9 || this->month == 11) {
 		return 30;
-	}else if (m.month == 2) {
-		if (m.leap()) {
+	}else if (this->month == 2) {
+		if (this->leap()) {
 			return 29;
 		}
 		else {
@@ -51,7 +51,7 @@ int Date::days_in_month(Date m) {
 	}
 }
 
-int Date::countDaysBetweenTwoDates(Date date) {
+int Date::days_range(Date date) {
 	int sum = 0;
 	int days_sum1 = this->countDays();
 	int days_sum2 = date.countDays();
@@ -60,23 +60,24 @@ int Date::countDaysBetweenTwoDates(Date date) {
 
 int Date::countDays() {
 	int sum = 0;
+	Date tmp;
 	for (int y = 1901; y < this->year; y++) {
-		sum += this->days_in_year(y);	//put year in parameters
+		sum += tmp.setDate(0, 0, y).days_in_year();	//put year in parameters
 	}
 	for (int m = 1; m < this->month; m++) {
-		sum += days_in_month(m);
+		sum += tmp.setDate(0, m, 0).days_in_month();
 	}
 	sum += this->day;
 	return sum;
 }
 
 bool Date::right_date() {
-	return (this->year >= 1901 && this->month >= 1 && this->month <= 12 && this->day >= 1 && this->day <= this->days_in_month(*this));
+	return (this->year >= 1901 && this->month >= 1 && this->month <= 12 && this->day >= 1 && this->day <= this->days_in_month());
  }
 
 void Date::next() {
 	if (this->right_date()) {
-		if (this->day < this->days_in_month(*this)) {	//если не последний день мес€ца
+		if (this->day < this->days_in_month()) {	//если не последний день мес€ца
 			this->day++;
 		}
 		else {
@@ -97,25 +98,34 @@ void Date::next() {
 
 Date define_date(int days) {
 	Date tmp;
-	while (days > (tmp.setDate(0, 0, 1901 + tmp.get_year())).days_in_year(tmp.setDate(0, 0, 1901 + tmp.get_year()))) { //is it run in while()?
-		days = days - tmp.days_in_year(tmp);									 //	
-		tmp.setDate(0, 0, tmp.get_year() - 1900);							//	
+	int y = 0;
+	tmp.setDate(0,0,y);
+	Date tmp2;
+	while (days > tmp.setDate(0, 0, 1901 + y).days_in_year()) {
+		days = days - tmp.days_in_year();									 
+		y++;							
 	}
-	tmp.setDate(0, 1, tmp.get_year() + 1901);
-	while (days > tmp.days_in_month(tmp)) {
-		days = days - tmp.days_in_month(tmp);
-		tmp.setDate(0, tmp.get_month() + 1, tmp.get_year());
+	y = 1901 + y;
+	int m = 1;
+	while (days > tmp.setDate(0, m, y).days_in_month()) {
+		days = days - tmp.days_in_month();
+		m++;
 	}
-	tmp.setDate(days, tmp.get_month(), tmp.get_year());
+	tmp.setDate(days, m, y);
 	return tmp;
 }
 
-void Date::future_date(int d) {
+Date Date::future_date(int d) {
 	int days = this->countDays() + d;
-	*this = define_date(days);
+	return define_date(days);
 }
 
 Date Date::past_date(int d) {
 	int days = this->countDays() - d;
 	return define_date(days);
+}
+
+int Date::days_to_exams() {
+	Date exam;
+	return this->days_range(exam.setDate(14, 1, 2019));
 }
