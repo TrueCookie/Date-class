@@ -3,18 +3,6 @@
 #include <vector>
 #include "Date.h"
 
-int Date::get_year() {
-	return this->year;
-}
-
-int Date::get_day() {
-	return this->day;
-}
-
-int Date::get_month() {
-	return this->month;
-}
-
 Date Date::setDate(int d = 1, int m = 1, int y = 1901) {
 	this->day = d;
 	this->month = m;
@@ -77,7 +65,7 @@ bool Date::right_date() {
 
 void Date::next() {
 	if (this->right_date()) {
-		if (this->day < this->days_in_month()) {	//если не последний день мес€ца
+		if (this->day < this->days_in_month()) {
 			this->day++;
 		}
 		else {
