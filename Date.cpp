@@ -3,21 +3,23 @@
 #include <vector>
 #include "Date.h"
 
-Date Date::setDate(int d = 1, int m = 1, int y = 1901) {
-	this->day = d;
-	this->month = m;
-	this->year = y;
+std::vector<int> Date::months = { 31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+Date Date::set_date(int d = 1, int m = 1, int y = 1901) {
+	this->day_ = d;
+	this->month_ = m;
+	this->year_ = y;
 	return *this;
 }
 
 void Date::print() {
-	std::cout << this->day << "." << this->month << "." << this->year << std::endl;
+	std::cout << this->day_ << "." << this->month_ << "." << this->year_ << std::endl;
 }
 
 bool Date::leap() {
-	return (this->year % 400 == 0) ||
-		(this->year % 100 != 0) &&
-		(this->year % 4 == 0);
+	return (this->year_ % 400 == 0) ||
+		(this->year_ % 100 != 0) &&
+		(this->year_ % 4 == 0);
 }
 
 int Date::days_in_year() {
@@ -25,9 +27,9 @@ int Date::days_in_year() {
 }
 
 int Date::days_in_month() {
-	if (this->month == 4 || this->month == 6 || this->month == 9 || this->month == 11) {
+	if (this->month_ == 4 || this->month_ == 6 || this->month_ == 9 || this->month_ == 11) {
 		return 30;
-	}else if (this->month == 2) {
+	}else if (this->month_ == 2) {
 		if (this->leap()) {
 			return 29;
 		}
@@ -41,21 +43,21 @@ int Date::days_in_month() {
 
 int Date::days_range(Date date) {
 	int sum = 0;
-	int days_sum1 = this->countDays();
-	int days_sum2 = date.countDays();
+	int days_sum1 = this->count_days();
+	int days_sum2 = date.count_days();
 	return (days_sum2 - days_sum1);
 }
 
-int Date::countDays() {
+int Date::count_days() {
 	int sum = 0;
 	Date tmp;
-	for (int y = 1901; y < this->year; y++) {
-		sum += tmp.setDate(0, 0, y).days_in_year();	//put year in parameters
+	for (int y = 1901; y < this->year_; y++) {
+		sum += tmp.set_date(0, 0, y).days_in_year();	//put year in parameters
 	}
-	for (int m = 1; m < this->month; m++) {
-		sum += tmp.setDate(0, m, 0).days_in_month();
+	for (int m = 1; m < this->month_; m++) {
+		sum += tmp.set_date(0, m, 0).days_in_month();
 	}
-	sum += this->day;
+	sum += this->day_;
 	return sum;
 }
 
@@ -65,18 +67,18 @@ bool Date::right_date() {
 
 void Date::next() {
 	if (this->right_date()) {
-		if (this->day < this->days_in_month()) {
-			this->day++;
+		if (this->day_ < this->days_in_month()) {
+			this->day_++;
 		}
 		else {
-			if (this->month < 12) {
-				this->month++;
-				this->day = 1;
+			if (this->month_ < 12) {
+				this->month_++;
+				this->day_ = 1;
 			}
 			else {
-				this->year++;
-				this->month = 1;
-				this->day = 1;
+				this->year_++;
+				this->month_ = 1;
+				this->day_ = 1;
 			}
 		}
 	}else {
@@ -87,33 +89,28 @@ void Date::next() {
 Date define_date(int days) {
 	Date tmp;
 	int y = 0;
-	tmp.setDate(0,0,y);
+	tmp.set_date(0,0,y);
 	Date tmp2;
-	while (days > tmp.setDate(0, 0, 1901 + y).days_in_year()) {
+	while (days > tmp.set_date(0, 0, 1901 + y).days_in_year()) {
 		days = days - tmp.days_in_year();									 
 		y++;							
 	}
 	y = 1901 + y;
 	int m = 1;
-	while (days > tmp.setDate(0, m, y).days_in_month()) {
+	while (days > tmp.set_date(0, m, y).days_in_month()) {
 		days = days - tmp.days_in_month();
 		m++;
 	}
-	tmp.setDate(days, m, y);
+	tmp.set_date(days, m, y);
 	return tmp;
 }
 
 Date Date::future_date(int d) {
-	int days = this->countDays() + d;
+	int days = this->count_days() + d;
 	return define_date(days);
 }
 
 Date Date::past_date(int d) {
-	int days = this->countDays() - d;
+	int days = this->count_days() - d;
 	return define_date(days);
-}
-
-int Date::days_to_exams() {
-	Date exam;
-	return this->days_range(exam.setDate(14, 1, 2019));
 }
