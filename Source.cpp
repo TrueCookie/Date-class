@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <algorithm>
 #include <vector>
 #include <conio.h>
@@ -45,6 +46,8 @@ int main() {
 
 	Date d_copy(d2);
 	std::cout << "copy of d2: "; d_copy.print();
+
+	std::cout << "Today is " << d4.define_weekday();
 
 	_getch();
 	return 0;

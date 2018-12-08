@@ -29,5 +29,5 @@ public:
 	Date past_date(int);	//return date at n days ago
 	Date future_date(int);	//return date for days
 	int count_days();	// days since the begin of the time
-	
+	std::string define_weekday();	//define day of week
 };

@@ -4,6 +4,15 @@
 #include "Date.h"
 
 std::vector<int> Date::months = { 31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+enum {
+MONDAY,
+TUESDAY,
+WEDNESDAY,
+THURSDAY,
+FRIDAY,
+SATURDAY,
+SUNDAY
+};
 
 Date Date::set_date(int d = 1, int m = 1, int y = 1901) {
 	this->day_ = d;
@@ -62,7 +71,7 @@ int Date::count_days() {
 }
 
 bool Date::right_date() {
-	return (this->year >= 1901 && this->month >= 1 && this->month <= 12 && this->day >= 1 && this->day <= this->days_in_month());
+	return (this->year_ >= 1901 && this->month_ >= 1 && this->month_ <= 12 && this->day_ >= 1 && this->day_ <= this->days_in_month());
  }
 
 void Date::next() {
@@ -113,4 +122,23 @@ Date Date::future_date(int d) {
 Date Date::past_date(int d) {
 	int days = this->count_days() - d;
 	return define_date(days);
+}
+
+std::string Date::define_weekday() {
+	switch (this->count_days() % 7 - 1) {
+	case MONDAY: return "Monday";
+		break;
+	case TUESDAY: return "Tuesday";
+		break;
+	case WEDNESDAY: return "Wednesday";
+		break;
+	case THURSDAY: return "Thursday";
+		break;
+	case FRIDAY: return "Friday";
+		break;
+	case SATURDAY: return "Saturday";
+		break;
+	case SUNDAY: return "Sunday";
+		break;
+	}
 }
